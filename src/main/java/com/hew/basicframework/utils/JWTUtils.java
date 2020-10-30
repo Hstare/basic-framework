@@ -24,6 +24,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author HeXiaoWei
@@ -66,20 +67,21 @@ public class JWTUtils {
         return jwt;
     }
 
-    public static String refreshToken(UserInfo user) {
+    public static String refreshToken(UserInfo user,String oldToken) {
         if(user == null) {
             return null;
         }
 
         HttpServletResponse response = HttpUtils.getResponse();
         String key = CommonEnum.REDIS_CACHE_LOGIN_USER.getValue() + user.getUsername();
-        UserInfo o = (UserInfo)RedisUtils.get(key);
-        if(o != null) {
-            String token = JWTUtils.create(o);
+        String o = (String)RedisUtils.get(key);
+        if(o != null && o.equals(oldToken)) {
+            String token = JWTUtils.create(user);
             response.setHeader(CommonEnum.TOKEN_PARAMETER.getValue(),token);
 
             //删除原来已经存在的key
             RedisUtils.del(key);
+            RedisUtils.set(key,token,3, TimeUnit.HOURS);
             return token;
         }
         return null;

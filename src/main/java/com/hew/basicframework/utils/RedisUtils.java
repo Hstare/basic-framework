@@ -2,6 +2,7 @@ package com.hew.basicframework.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -13,11 +14,17 @@ import java.util.concurrent.TimeUnit;
  * @author HeXiaoWei
  * @date 2020/10/18 11:44
  */
+@Component
 public class RedisUtils {
-
-    @Autowired
     private static RedisTemplate<String, Object> redisTemplate;
 
+    /*
+    * redisTemplate 是静态变量，不能直接注入，采用set方法注入
+    * */
+    @Autowired
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+        RedisUtils.redisTemplate = redisTemplate;
+    }
     /**
      * 普通缓存放入
      *

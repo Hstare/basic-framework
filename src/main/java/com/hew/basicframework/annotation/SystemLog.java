@@ -21,8 +21,8 @@ public @interface SystemLog {
     int type() default Constant.TYPE_OPERATION;
 
     /*
-     * 操作类型
+     * 操作类型(默认不知道操作类型)
      * */
-    int operationType() default Constant.OPERATION_QUERY;
+    int operationType() default 0;
 
 }

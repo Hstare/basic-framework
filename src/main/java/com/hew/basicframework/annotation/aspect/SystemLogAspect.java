@@ -4,20 +4,30 @@ import com.hew.basicframework.DO.SystemLogInfo;
 import com.hew.basicframework.DO.UserInfo;
 import com.hew.basicframework.annotation.Constant;
 import com.hew.basicframework.annotation.SystemLog;
+import com.hew.basicframework.enums.CommonEnum;
 import com.hew.basicframework.service.SystemLogService;
 import com.hew.basicframework.utils.HttpUtils;
 import com.hew.basicframework.utils.IpUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author HeXiaoWei
@@ -26,18 +36,20 @@ import java.util.Date;
 @Aspect
 @Component
 public class SystemLogAspect {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemLogAspect.class);
     @Autowired
     SystemLogService systemLogService;
 
     @Pointcut("@annotation(com.hew.basicframework.annotation.SystemLog)")
     public void pointcut(){}
 
+    @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        long startTime = System.currentTimeMillis();
+        long startTime = Instant.now().toEpochMilli();
         Object proceed = point.proceed();
-        long time = System.currentTimeMillis() - startTime;
+        long endTime = Instant.now().toEpochMilli();
         //保存日志
-        saveSysLog(point, time);
+        saveSysLog(point, endTime - startTime);
         return proceed;
     }
 
@@ -54,14 +66,51 @@ public class SystemLogAspect {
         log.setCostTime(time);
 //        log.setCreateBy()
         log.setIp(IpUtils.getIpAddr());
-        log.setMethod(className + "." + methodName + "()");
+        String requestMethod = className + "." + methodName + "()";
+        log.setMethod(requestMethod);
         log.setRequestParam("");
 //        log.setRequestType()
-//        log.setRequestUrl()
+        log.setRequestUrl(HttpUtils.getURL());
         log.setCreateTime(new Date());
         User user = HttpUtils.getUser();
         log.setUsername(user.getUsername());
+        Integer operateType = getOperateType(methodName, systemLog.type());
+        /*if(operateType == -1) {
+            LOGGER.warn("{} 方法名不符合规范",requestMethod);
+        }*/
+        log.setOperateType(operateType);
         systemLogService.save(log);
+    }
+
+    private Integer getOperateType(String methodName,Integer operationType) {
+        if(operationType != 0) {
+            return operationType;
+        }
+        if(startWith(methodName,CommonEnum.OPERATION_LOGIN.getValue())){
+            return CommonEnum.OPERATION_LOGIN.getCode();
+        } else if(startWith(methodName,CommonEnum.OPERATION_COUNT.getValue())) {
+            return CommonEnum.OPERATION_COUNT.getCode();
+        } else if(startWith(methodName,CommonEnum.OPERATION_QUERY.getValue(),CommonEnum.OPERATION_MULTIPLE_QUERY.getValue())) {
+            return CommonEnum.OPERATION_QUERY.getCode();
+        } else if(startWith(methodName,CommonEnum.OPERATION_INSERT.getValue(),CommonEnum.OPERATION_SAVE.getValue())) {
+            return CommonEnum.OPERATION_INSERT.getCode();
+        } else if(startWith(methodName,CommonEnum.OPERATION_UPDATE.getValue())) {
+            return CommonEnum.OPERATION_UPDATE.getCode();
+        } else if(startWith(methodName,CommonEnum.OPERATION_DELETE.getValue(),CommonEnum.OPERATION_REMOVE.getValue())) {
+            return CommonEnum.OPERATION_DELETE.getCode();
+        } else if(startWith(methodName,CommonEnum.OPERATION_IMPORT.getValue())) {
+            return CommonEnum.OPERATION_IMPORT.getCode();
+        } else if(startWith(methodName,CommonEnum.OPERATION_EXPORT.getValue())) {
+            return CommonEnum.OPERATION_EXPORT.getCode();
+        } else if(startWith(methodName,CommonEnum.OPERATION_LOGOUT.getValue())) {
+            return CommonEnum.OPERATION_LOGOUT.getCode();
+        }
+        return -1;
+    }
+
+    private boolean startWith(String methodName, String... start){
+        List<String> strings = Arrays.asList(start);
+        return strings.stream().filter(s -> methodName.startsWith(s)).collect(Collectors.toList()).size() > 0;
     }
 
 }

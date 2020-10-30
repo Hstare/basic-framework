@@ -54,5 +54,12 @@ public class HttpUtils {
        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public static String getURI() {
+        return getRequest().getRequestURI();
+    }
+
+    public static String getURL() {
+        return getRequest().getRequestURL().toString();
+    }
 
 }

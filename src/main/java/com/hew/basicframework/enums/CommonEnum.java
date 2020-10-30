@@ -24,16 +24,19 @@ public enum CommonEnum {
 
     REDIS_CACHE_LOGIN_USER(0,"sys:login:user:","Redis缓存登录用户前缀"),
 
-    OPERATION_COUNT(0,"count","统计"),
-    OPERATION_QUERY(1,"get","查询"),
-    OPERATION_MULTIPLE_QUERY(1,"list","查询多条值"),
-    OPERATION_SAVE(2,"save","插入"),
-    OPERATION_INSERT(2,"insert","插入"),
-    OPERATION_UPDATE(3,"update","更新"),
-    OPERATION_REMOVE(4,"remove","删除"),
-    OPERATION_DELETE(4,"delete","删除"),
-    OPERATION_IMPORT(5,"import","导入"),
-    OPERATION_EXPORT(6,"export","导出");
+    OPERATION_DEFAULT(0,"default","默认操作"),
+    OPERATION_LOGIN(1,"login","登录"),
+    OPERATION_COUNT(2,"count","统计"),
+    OPERATION_QUERY(3,"get","查询"),
+    OPERATION_MULTIPLE_QUERY(3,"list","查询多条值"),
+    OPERATION_SAVE(4,"save","插入"),
+    OPERATION_INSERT(4,"insert","插入"),
+    OPERATION_UPDATE(5,"update","更新"),
+    OPERATION_REMOVE(6,"remove","删除"),
+    OPERATION_DELETE(6,"delete","删除"),
+    OPERATION_IMPORT(7,"import","导入"),
+    OPERATION_EXPORT(8,"export","导出"),
+    OPERATION_LOGOUT(-1,"logout","退出");
 
     private int code;
     private String value;

@@ -31,6 +31,7 @@ import java.util.Optional;
 
 /**
  * JWTAuthenticationFilter 表明已经登录这个过滤器只验证token是否合法
+ *
  * @author HeXiaoWei
  * @date 2020/10/13 15:30
  */
@@ -39,23 +40,23 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final Logger LOGGER = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
     private String authorizationParameter = CommonEnum.TOKEN_PARAMETER.getValue();
-    private List<String> permitAll = Arrays.asList("/login","/favicon.ico");
+    private List<String> permitAll = Arrays.asList("/login", "/favicon.ico");
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         UserInfo user = null;
+        String token = request.getHeader(authorizationParameter);
         try {
             String uri = request.getRequestURI();
-            LOGGER.info("uri-->:{}",uri);
+            LOGGER.info("uri-->:{}", uri);
             String s = Optional.ofNullable(uri).orElse("");
-            boolean notPermitUrl = !(s.startsWith("/swagger-ui/")  || s.startsWith("/swagger-resources") || s.startsWith("/v3/") || permitAll.contains(uri));
-            if(notPermitUrl) {
-                String token = request.getHeader(authorizationParameter);
-                if(StringUtils.isEmpty(token)) {
+            boolean notPermitUrl = !(s.startsWith("/swagger-ui/") || s.startsWith("/swagger-resources") || s.startsWith("/v3/") || permitAll.contains(uri));
+            if (notPermitUrl) {
+                if (StringUtils.isEmpty(token)) {
                     throw new JWTAuthenticationException("Token 不能为空");
                 }
                 DecodedJWT jwt = JWTUtils.verify(token);
                 user = JSONObject.parseObject(jwt.getSubject(), UserInfo.class);
-                //获取的authorities 为null
                 Collection<SimpleGrantedAuthority> authorities = user.getGrantedAuthorities();
                 JWTAuthenticationToken authentication = new JWTAuthenticationToken(user, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -63,24 +64,24 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (TokenExpiredException e) {
             //token 过期之后刷新token
-            String newToken = JWTUtils.refreshToken(user);
-            if(newToken == null) {
-                LOGGER.error("JWT 认证Token过期异常:{}",e.getMessage());
+            String newToken = JWTUtils.refreshToken(user,token);
+            if (newToken == null) {
+                LOGGER.error("JWT 认证Token过期异常:{}", e.getMessage());
                 ResultVo<Object> result = new ResultVo<>();
-                HttpUtils.responseJson(response,result.fail(CodeMessageEnum.TOKEN_EXPIRED.getCode(),e.getMessage()));
+                HttpUtils.responseJson(response, result.fail(CodeMessageEnum.TOKEN_EXPIRED.getCode(), e.getMessage()));
             }
         } catch (JWTVerificationException e) {
-            LOGGER.error("JWT 认证验证异常:{}",e.getMessage());
+            LOGGER.error("JWT 认证验证异常:{}", e.getMessage());
             ResultVo<Object> result = new ResultVo<>();
-            HttpUtils.responseJson(response,result.fail(e.getMessage()));
-        }catch (JWTAuthenticationException e){
-            LOGGER.error("JWT 认证统一异常:{}",e.getMessage());
+            HttpUtils.responseJson(response, result.fail(e.getMessage()));
+        } catch (JWTAuthenticationException e) {
+            LOGGER.error("JWT 认证统一异常:{}", e.getMessage());
             ResultVo<Object> result = new ResultVo<>();
-            HttpUtils.responseJson(response,result.fail(e.getMessage()));
-        }catch (Exception e){
-            LOGGER.error("JWT 认证过滤异常:{}",e.getMessage());
+            HttpUtils.responseJson(response, result.fail(e.getMessage()));
+        } catch (Exception e) {
+            LOGGER.error("JWT 认证过滤异常:{}", e.getMessage());
             ResultVo<Object> result = new ResultVo<>();
-            HttpUtils.responseJson(response,result.fail(e.getMessage()));
+            HttpUtils.responseJson(response, result.fail(e.getMessage()));
         }
     }
 }

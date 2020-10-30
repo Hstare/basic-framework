@@ -34,7 +34,6 @@ public class LoginUserDetailsService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     LoginService loginService;
-    final String ROLE_PREFIX = "ROLE_";
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserInfo userInfo = loginService.getUserInfo(username);
@@ -44,7 +43,7 @@ public class LoginUserDetailsService implements UserDetailsService {
         }
         String encodePassword = passwordEncoder.encode(userInfo.getPassword());
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        userInfo.getAuthorities().forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority.startsWith(ROLE_PREFIX) ? authority : ROLE_PREFIX + authority)));
+        userInfo.getAuthorities().forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority)));
         userInfo.setGrantedAuthorities(authorities);
         User user = new User(username, encodePassword, userInfo.isEnabled(), userInfo.isAccountNonExpired(), userInfo.isCredentialsNonExpired(), userInfo.isAccountNonLocked(), authorities);
         String token = JWTUtils.create(userInfo);
@@ -52,7 +51,7 @@ public class LoginUserDetailsService implements UserDetailsService {
         response.setHeader(CommonEnum.TOKEN_PARAMETER.getValue(),token);
         //redis存储
         String key = CommonEnum.REDIS_CACHE_LOGIN_USER.getValue() + userInfo.getUsername();
-        RedisUtils.set(key,userInfo,1, TimeUnit.DAYS);
+        RedisUtils.set(key,token,3, TimeUnit.HOURS);
         return user;
     }
 }
