@@ -22,7 +22,7 @@ import javax.naming.AuthenticationException;
  */
 @RestControllerAdvice
 public class GlobalException {
-    private final Logger LOGGER = LoggerFactory.getLogger(LoginAuthenticationFailureHandler.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(GlobalException.class);
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public String handlerNoFoundException(Exception e) {

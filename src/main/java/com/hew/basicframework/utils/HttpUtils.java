@@ -1,5 +1,6 @@
 package com.hew.basicframework.utils;
 
+import com.hew.basicframework.DO.UserInfo;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -50,8 +51,8 @@ public class HttpUtils {
      * 获取用户信息
      * @return UserInfo
      */
-    public static User getUser() {
-       return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public static UserInfo getUser() {
+       return (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public static String getURI() {

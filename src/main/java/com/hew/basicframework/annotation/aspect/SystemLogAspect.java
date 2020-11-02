@@ -72,7 +72,7 @@ public class SystemLogAspect {
 //        log.setRequestType()
         log.setRequestUrl(HttpUtils.getURL());
         log.setCreateTime(new Date());
-        User user = HttpUtils.getUser();
+        UserInfo user = HttpUtils.getUser();
         log.setUsername(user.getUsername());
         Integer operateType = getOperateType(methodName, systemLog.type());
         /*if(operateType == -1) {
