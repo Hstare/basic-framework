@@ -20,10 +20,11 @@ import java.io.IOException;
 @Component
 public class LoginAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(LoginAuthenticationFailureHandler.class);
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        LOGGER.error("认证登录失败处理:{}",exception.getMessage());
+        LOGGER.error("认证登录失败处理:{}", exception.getMessage());
         ResultVo<Object> result = new ResultVo<>();
-        HttpUtils.responseJson(response,result.fail("登录失败"));
+        HttpUtils.responseJson(response, result.fail("登录失败"));
     }
 }

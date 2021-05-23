@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests(authorize ->
         {
             try {
-                authorize.antMatchers("/favicon.ico", "/swagger-ui/*", "/swagger-resources/**", "/webjars/**","/v3/api-docs").permitAll()
+                authorize.antMatchers("/favicon.ico", "/swagger-ui/*", "/swagger-resources/**", "/webjars/**", "/v3/api-docs").permitAll()
                         .anyRequest().authenticated()
                         .and().formLogin()
                         .loginProcessingUrl("/login")

@@ -12,9 +12,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface SystemLog {
     /*
-    * 日志内容
-    * */
+     * 日志内容
+     * */
     String value() default "";
+
     /*
      * 日志类型(0: 登录[login],1: 退出[logout],2: 操作[operation])
      * */

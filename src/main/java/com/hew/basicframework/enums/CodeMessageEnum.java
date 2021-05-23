@@ -10,12 +10,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum CodeMessageEnum {
-    SUCCESS(0,"成功"),
-    FAIL(-1,"失败"),
+    SUCCESS(0, "成功"),
+    FAIL(-1, "失败"),
 
-    TOKEN(100,"非法Token"),
-    TOKEN_EXPIRED(101,"Token已过期，请重新获取"),
-    TOKEN_REFRESH(200,"token已刷新,请更新Token！");
+    TOKEN(100, "非法Token"),
+    TOKEN_EXPIRED(101, "Token已过期，请重新获取"),
+    TOKEN_REFRESH(200, "token已刷新,请更新Token！");
     private int code;
     private String msg;
 }

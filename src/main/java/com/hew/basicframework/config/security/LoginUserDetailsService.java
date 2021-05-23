@@ -34,11 +34,12 @@ public class LoginUserDetailsService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     LoginService loginService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserInfo userInfo = loginService.getUserInfo(username);
-        LOGGER.info("UserDetails:{}",userInfo);
-        if(null == userInfo) {
+        LOGGER.info("UserDetails:{}", userInfo);
+        if (null == userInfo) {
             throw new UsernameNotFoundException("不存在此用户！");
         }
         String encodePassword = passwordEncoder.encode(userInfo.getPassword());
@@ -48,10 +49,10 @@ public class LoginUserDetailsService implements UserDetailsService {
         User user = new User(username, encodePassword, userInfo.isEnabled(), userInfo.isAccountNonExpired(), userInfo.isCredentialsNonExpired(), userInfo.isAccountNonLocked(), authorities);
         String token = JWTUtils.create(userInfo);
         HttpServletResponse response = HttpUtils.getResponse();
-        response.setHeader(CommonEnum.TOKEN_PARAMETER.getValue(),token);
+        response.setHeader(CommonEnum.TOKEN_PARAMETER.getValue(), token);
         //redis存储
         String key = CommonEnum.REDIS_CACHE_LOGIN_USER.getValue() + userInfo.getUsername();
-        RedisUtils.set(key,token,3, TimeUnit.HOURS);
+        RedisUtils.set(key, token, 3, TimeUnit.HOURS);
         return user;
     }
 }

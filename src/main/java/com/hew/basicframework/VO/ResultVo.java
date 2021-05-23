@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * 返回结果实体类
+ *
  * @author pai
  * @date 2020/8/10
  */
@@ -25,21 +26,21 @@ public class ResultVo<T> {
     private String msg;
     private T data;
 
-    public String success(T data){
+    public String success(T data) {
         return success(CodeMessageEnum.SUCCESS.getMsg(), data);
     }
 
-    public String success(String msg, T data){
+    public String success(String msg, T data) {
         ResultVo<T> resultVo = new ResultVo<>(CodeMessageEnum.SUCCESS.getCode(), msg, data);
         return JSON.toJSONString(resultVo);
     }
 
     public String fail(String msg) {
-        return fail(CodeMessageEnum.FAIL.getCode(),msg);
+        return fail(CodeMessageEnum.FAIL.getCode(), msg);
     }
 
     public String fail(Integer code, String msg) {
-        if(StringUtils.isEmpty(msg)) {
+        if (StringUtils.isEmpty(msg)) {
             msg = CodeMessageEnum.FAIL.getMsg();
         }
         ResultVo<T> resultVo = new ResultVo<>(code, msg, null);

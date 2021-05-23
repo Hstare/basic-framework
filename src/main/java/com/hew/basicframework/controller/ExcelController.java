@@ -23,7 +23,7 @@ public class ExcelController {
     }
 
     @GetMapping("download")
-    public void download(HttpServletResponse response,String fileName) throws IOException {
+    public void download(HttpServletResponse response, String fileName) throws IOException {
 //        ExcelUtils.write(fileName,);
     }
 }

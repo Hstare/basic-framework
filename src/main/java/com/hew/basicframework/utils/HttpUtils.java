@@ -17,15 +17,15 @@ import java.io.PrintWriter;
  */
 public class HttpUtils {
 
-    public static void responseJson(HttpServletResponse response,String json) throws IOException {
+    public static void responseJson(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter writer = response.getWriter();
         try {
             writer.write(json);
             writer.flush();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             writer.close();
         }
     }
@@ -33,26 +33,29 @@ public class HttpUtils {
 
     /**
      * 获取response
+     *
      * @return HttpServletResponse
      */
     public static HttpServletResponse getResponse() {
-       return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
     }
 
     /**
      * 获取request
+     *
      * @return HttpServletRequest
      */
     public static HttpServletRequest getRequest() {
-       return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 
     /**
      * 获取用户信息
+     *
      * @return UserInfo
      */
     public static UserInfo getUser() {
-       return (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public static String getURI() {

@@ -64,7 +64,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (TokenExpiredException e) {
             //token 过期之后刷新token
-            String newToken = JWTUtils.refreshToken(user,token);
+            String newToken = JWTUtils.refreshToken(user, token);
             if (newToken == null) {
                 LOGGER.error("JWT 认证Token过期异常:{}", e.getMessage());
                 ResultVo<Object> result = new ResultVo<>();

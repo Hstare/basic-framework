@@ -22,7 +22,7 @@ import java.util.*;
  */
 @Configuration
 @EnableOpenApi
-public class SwaggerConfig{
+public class SwaggerConfig {
     private final SwaggerProperties swaggerProperties;
 
     public SwaggerConfig(SwaggerProperties swaggerProperties) {

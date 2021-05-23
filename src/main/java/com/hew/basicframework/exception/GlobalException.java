@@ -32,14 +32,14 @@ public class GlobalException {
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    public String handleDuplicateKeyException(DuplicateKeyException e){
+    public String handleDuplicateKeyException(DuplicateKeyException e) {
         LOGGER.error(e.getMessage(), e);
         ResultVo<Object> resultVo = new ResultVo<>();
         return resultVo.fail("数据库中已存在该记录");
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public String HttpRequestMethodNotSupportedException(Exception e){
+    public String HttpRequestMethodNotSupportedException(Exception e) {
         LOGGER.error(e.getMessage(), e);
         ResultVo<Object> resultVo = new ResultVo<>();
         return resultVo.fail("没有权限，请联系管理员授权");
@@ -70,14 +70,14 @@ public class GlobalException {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public String handleAuthenticationException(AuthenticationException e){
+    public String handleAuthenticationException(AuthenticationException e) {
         LOGGER.error(e.getMessage(), e);
         ResultVo<Object> resultVo = new ResultVo<>();
         return resultVo.fail("没有权限，请联系管理员");
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public String handleAuthenticationException(AccessDeniedException e){
+    public String handleAuthenticationException(AccessDeniedException e) {
         LOGGER.error(e.getMessage(), e);
         ResultVo<Object> resultVo = new ResultVo<>();
         return resultVo.fail("不允许访问");
@@ -85,8 +85,8 @@ public class GlobalException {
 
 
     @ExceptionHandler(Exception.class)
-    public String handlerException(Exception e){
-        LOGGER.error("全局异常",e);
+    public String handlerException(Exception e) {
+        LOGGER.error("全局异常", e);
         e.printStackTrace();
         ResultVo<Object> resultVo = new ResultVo<>();
         return resultVo.fail(e.getLocalizedMessage());

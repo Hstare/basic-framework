@@ -41,7 +41,8 @@ public class SystemLogAspect {
     SystemLogService systemLogService;
 
     @Pointcut("@annotation(com.hew.basicframework.annotation.SystemLog)")
-    public void pointcut(){}
+    public void pointcut() {
+    }
 
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
@@ -54,7 +55,7 @@ public class SystemLogAspect {
     }
 
     public void saveSysLog(ProceedingJoinPoint point, long time) {
-        MethodSignature signature = (MethodSignature)point.getSignature();
+        MethodSignature signature = (MethodSignature) point.getSignature();
         String className = point.getTarget().getClass().getName();
         Method method = signature.getMethod();
         String methodName = method.getName();
@@ -82,33 +83,33 @@ public class SystemLogAspect {
         systemLogService.save(log);
     }
 
-    private Integer getOperateType(String methodName,Integer operationType) {
-        if(operationType != 0) {
+    private Integer getOperateType(String methodName, Integer operationType) {
+        if (operationType != 0) {
             return operationType;
         }
-        if(startWith(methodName,CommonEnum.OPERATION_LOGIN.getValue())){
+        if (startWith(methodName, CommonEnum.OPERATION_LOGIN.getValue())) {
             return CommonEnum.OPERATION_LOGIN.getCode();
-        } else if(startWith(methodName,CommonEnum.OPERATION_COUNT.getValue())) {
+        } else if (startWith(methodName, CommonEnum.OPERATION_COUNT.getValue())) {
             return CommonEnum.OPERATION_COUNT.getCode();
-        } else if(startWith(methodName,CommonEnum.OPERATION_QUERY.getValue(),CommonEnum.OPERATION_MULTIPLE_QUERY.getValue())) {
+        } else if (startWith(methodName, CommonEnum.OPERATION_QUERY.getValue(), CommonEnum.OPERATION_MULTIPLE_QUERY.getValue())) {
             return CommonEnum.OPERATION_QUERY.getCode();
-        } else if(startWith(methodName,CommonEnum.OPERATION_INSERT.getValue(),CommonEnum.OPERATION_SAVE.getValue())) {
+        } else if (startWith(methodName, CommonEnum.OPERATION_INSERT.getValue(), CommonEnum.OPERATION_SAVE.getValue())) {
             return CommonEnum.OPERATION_INSERT.getCode();
-        } else if(startWith(methodName,CommonEnum.OPERATION_UPDATE.getValue())) {
+        } else if (startWith(methodName, CommonEnum.OPERATION_UPDATE.getValue())) {
             return CommonEnum.OPERATION_UPDATE.getCode();
-        } else if(startWith(methodName,CommonEnum.OPERATION_DELETE.getValue(),CommonEnum.OPERATION_REMOVE.getValue())) {
+        } else if (startWith(methodName, CommonEnum.OPERATION_DELETE.getValue(), CommonEnum.OPERATION_REMOVE.getValue())) {
             return CommonEnum.OPERATION_DELETE.getCode();
-        } else if(startWith(methodName,CommonEnum.OPERATION_IMPORT.getValue())) {
+        } else if (startWith(methodName, CommonEnum.OPERATION_IMPORT.getValue())) {
             return CommonEnum.OPERATION_IMPORT.getCode();
-        } else if(startWith(methodName,CommonEnum.OPERATION_EXPORT.getValue())) {
+        } else if (startWith(methodName, CommonEnum.OPERATION_EXPORT.getValue())) {
             return CommonEnum.OPERATION_EXPORT.getCode();
-        } else if(startWith(methodName,CommonEnum.OPERATION_LOGOUT.getValue())) {
+        } else if (startWith(methodName, CommonEnum.OPERATION_LOGOUT.getValue())) {
             return CommonEnum.OPERATION_LOGOUT.getCode();
         }
         return -1;
     }
 
-    private boolean startWith(String methodName, String... start){
+    private boolean startWith(String methodName, String... start) {
         List<String> strings = Arrays.asList(start);
         return strings.stream().filter(s -> methodName.startsWith(s)).collect(Collectors.toList()).size() > 0;
     }

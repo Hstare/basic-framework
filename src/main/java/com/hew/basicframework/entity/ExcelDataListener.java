@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * 不被spring管理，要每次读取excel都要new
+ *
  * @author HeXiaoWei
  * @date 2020/10/17 16:23
  */
@@ -28,7 +29,7 @@ public class ExcelDataListener<T> extends AnalysisEventListener<T> {
     @Autowired
     ExcelMapper<T> excelMapper;
 
-    public ExcelDataListener(ExcelMapper excelMapper){
+    public ExcelDataListener(ExcelMapper excelMapper) {
         this.excelMapper = excelMapper;
     }
 
@@ -57,11 +58,16 @@ public class ExcelDataListener<T> extends AnalysisEventListener<T> {
         // 如果是某一个单元格的转换异常 能获取到具体行号
         // 如果要获取头的信息 配合invokeHeadMap使用
         if (exception instanceof ExcelDataConvertException) {
-            ExcelDataConvertException excelDataConvertException = (ExcelDataConvertException)exception;
-            LOGGER.error("第{}行，第{}列解析异常", excelDataConvertException.getRowIndex(),
-                    excelDataConvertException.getColumnIndex());
+            ExcelDataConvertException excelDataConvertException = (ExcelDataConvertException) exception;
+            Integer rowIndex = excelDataConvertException.getRowIndex();
+            Integer columnIndex = excelDataConvertException.getColumnIndex();
+            LOGGER.error("第{}行，第{}列解析异常", rowIndex, columnIndex);
+            throw new ExcelDataConvertException(rowIndex, columnIndex, null, null, "第" + rowIndex + "行，第" + (columnIndex + 1) + "列数据解析异常", exception);
+        } else {
+            throw new RuntimeException("Excel 数据转换异常");
         }
     }
+
     /**
      * 加上存储数据库
      */

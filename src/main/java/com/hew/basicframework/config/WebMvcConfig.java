@@ -14,7 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.nio.charset.StandardCharsets;
 
 /**
- *  Spring Boot 2.0 解决跨域问题
+ * Spring Boot 2.0 解决跨域问题
+ *
  * @author HeXiaoWei
  * @date 2020/10/13 13:09
  */
@@ -35,6 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
+
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         MediaType mediaType = new MediaType("application", "json", StandardCharsets.UTF_8);

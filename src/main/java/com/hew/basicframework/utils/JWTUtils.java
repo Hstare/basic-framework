@@ -49,39 +49,39 @@ public class JWTUtils {
                     .withExpiresAt(EXPIRE_HALF_HOURS)
                     .withSubject(JSONObject.toJSONString(user))
                     .sign(algorithm);
-        } catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             throw new JWTAuthenticationException("JWT创建异常：无效的签名设置");
         }
         return token;
     }
 
-    public static DecodedJWT verify(String token){
+    public static DecodedJWT verify(String token) {
         DecodedJWT jwt;
         try {
             jwt = verifier.verify(token);
         } catch (TokenExpiredException e) {
             throw new TokenExpiredException(CodeMessageEnum.TOKEN_EXPIRED.getMsg());
-        }catch (JWTVerificationException exception){
+        } catch (JWTVerificationException exception) {
             throw new JWTAuthenticationException("JWT验证异常");
         }
         return jwt;
     }
 
-    public static String refreshToken(UserInfo user,String oldToken) {
-        if(user == null) {
+    public static String refreshToken(UserInfo user, String oldToken) {
+        if (user == null) {
             return null;
         }
 
         HttpServletResponse response = HttpUtils.getResponse();
         String key = CommonEnum.REDIS_CACHE_LOGIN_USER.getValue() + user.getUsername();
-        String o = (String)RedisUtils.get(key);
-        if(o != null && o.equals(oldToken)) {
+        String o = (String) RedisUtils.get(key);
+        if (o != null && o.equals(oldToken)) {
             String token = JWTUtils.create(user);
-            response.setHeader(CommonEnum.TOKEN_PARAMETER.getValue(),token);
+            response.setHeader(CommonEnum.TOKEN_PARAMETER.getValue(), token);
 
             //删除原来已经存在的key
             RedisUtils.del(key);
-            RedisUtils.set(key,token,3, TimeUnit.HOURS);
+            RedisUtils.set(key, token, 3, TimeUnit.HOURS);
             return token;
         }
         return null;

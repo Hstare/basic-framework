@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
  * @date 2020/10/13 11:49
  */
 @Configuration
-@MapperScan("com.hew.basicframework.mappper.**.*")
+@MapperScan("com.hew.basicframework.mapper")
 public class MybatisPlusConfig {
     @Bean
     public PaginationInterceptor paginationInterceptor() {
@@ -28,7 +28,7 @@ public class MybatisPlusConfig {
      * 这只是记录sql性能分析，例如，打印sql执行时间是多少。
      * 生产环境中，必须关闭。
      * */
-    @Profile({"dev","test"})// 设置 dev test 环境开启
+    @Profile({"dev", "test"})// 设置 dev test 环境开启
     @Bean
     public PerformanceInterceptor performanceInterceptor() {
         return new PerformanceInterceptor();

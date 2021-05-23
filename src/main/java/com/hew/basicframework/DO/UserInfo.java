@@ -26,8 +26,11 @@ public class UserInfo {
     private Set<String> authorities;
     @Transient
     private List<SimpleGrantedAuthority> grantedAuthorities;
-    private boolean accountNonExpired = true;;
-    private boolean accountNonLocked = true;;
-    private boolean credentialsNonExpired = true;;
+    private boolean accountNonExpired = true;
+    ;
+    private boolean accountNonLocked = true;
+    ;
+    private boolean credentialsNonExpired = true;
+    ;
     private boolean enabled = true;
 }

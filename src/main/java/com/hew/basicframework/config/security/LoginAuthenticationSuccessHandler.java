@@ -26,9 +26,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class LoginAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(LoginAuthenticationSuccessHandler.class);
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        LOGGER.info("SuccessHandler-->:{}",authentication);
+        LOGGER.info("SuccessHandler-->:{}", authentication);
         ResultVo<String> result = new ResultVo<>();
         result.setCode(0);
         result.setMsg("登录成功");

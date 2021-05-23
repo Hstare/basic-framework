@@ -19,12 +19,13 @@ public class RedisUtils {
     private static RedisTemplate<String, Object> redisTemplate;
 
     /*
-    * redisTemplate 是静态变量，不能直接注入，采用set方法注入
-    * */
+     * redisTemplate 是静态变量，不能直接注入，采用set方法注入
+     * */
     @Autowired
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         RedisUtils.redisTemplate = redisTemplate;
     }
+
     /**
      * 普通缓存放入
      *
@@ -50,7 +51,7 @@ public class RedisUtils {
      * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
      * @return true成功 false 失败
      */
-    public static  boolean set(String key, Object value, long time) {
+    public static boolean set(String key, Object value, long time) {
         try {
             if (time > 0) {
                 redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
@@ -73,7 +74,7 @@ public class RedisUtils {
      * @param unit  时间单位
      * @return true成功 false 失败
      */
-    public static  boolean set(String key, Object value, long time, TimeUnit unit) {
+    public static boolean set(String key, Object value, long time, TimeUnit unit) {
         try {
             if (time > 0) {
                 redisTemplate.opsForValue().set(key, value, time, unit);
@@ -135,8 +136,8 @@ public class RedisUtils {
     /**
      * 递增
      *
-     * @param key 键
-     * @param delta  要增加几(大于0)
+     * @param key   键
+     * @param delta 要增加几(大于0)
      * @return
      */
     public static long incr(String key, long delta) {
@@ -149,8 +150,8 @@ public class RedisUtils {
     /**
      * 递减
      *
-     * @param key 键
-     * @param delta  要减少几(小于0)
+     * @param key   键
+     * @param delta 要减少几(小于0)
      * @return
      */
     public static long decr(String key, long delta) {
@@ -161,6 +162,7 @@ public class RedisUtils {
     }
 
     // ================================Map=================================
+
     /**
      * HashGet
      *
@@ -306,6 +308,7 @@ public class RedisUtils {
     }
 
     // ============================set=============================
+
     /**
      * 根据key获取Set中的所有值
      *
